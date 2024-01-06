@@ -2,7 +2,7 @@
 
 ![pipeline ci/cd](images/CICD.jpg "pipeline ci/cd")
 
-Dans ce projet, j'ai conteneurisé un site web statique disponible sur mon github sous le lien https://github.com/sid-rabhi/static-website-example/ et j'ai mis en place un pipeline de CI/CD sur GitLab pour automatiser les étapes de construction, de test et de déploiement de l'application sur Heroku. Ce rapport explique les étapes du pipeline que vous trouverez dans le fichier `.gitlab-ci.yml`, et les avantages de cette approche.
+Dans ce projet, j'ai conteneurisé un site web statique disponible sur mon Github sous le lien https://github.com/sid-rabhi/static-website-example/ et j'ai mis en place un pipeline de CI/CD sur mon GitLab https://gitlab.com/sid-rabhi/staticwebsite pour automatiser les étapes de construction, de test et de déploiement de l'application sur Heroku. Ce rapport explique les étapes du pipeline que vous trouverez dans le fichier `.gitlab-ci.yml`, et les avantages de cette approche.
 
 ---
 
@@ -64,3 +64,21 @@ LinkedIn : https://www.linkedin.com/in/sid-ahmed-rabhi/
    - *Condition* : S'exécute après le déploiement réussi dans l'environnement de production.
    - Exécute un curl sur l'environnement de production pour garantir le bon fonctionnement de l'application.
 
+## Aperçu des environements sur Heroku
+
+![webapp](images/heroku.png "webapp")
+
+## Aperçu du site
+
+![webapp](images/website.png "webapp")
+
+
+## Technologies utilisées
+
+- Docker : Pour conteneuriser l'application et faciliter son déploiement.
+- GitLab CI/CD : Pour automatiser les étapes de construction, de test et de déploiement de l'application.
+- Heroku : Pour héberger l'application dans différents environnements (review, staging et production).
+
+## Conclusion
+
+En mettant en place ce pipeline CI/CD pour l'application web statique, j'ai pu automatiser les processus de construction, de test et de déploiement, tout en garantissant que l'application est correctement testée et fonctionnelle avant d'être mise en production. L'utilisation de Docker et de GitLab CI/CD a facilité la gestion des environnements et des déploiements, offrant un moyen efficace et fiable de mettre à jour et de maintenir l'application.
