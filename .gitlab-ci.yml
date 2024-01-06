@@ -1,0 +1,154 @@
+variables:
+  APP_NAME: "staticwebsite"
+  APP_CONTAINER_PORT: "80"
+  APP_EXPOSED_PORT: "80"
+  HEROKU_APP_STG: "sid-staging"
+  HEROKU_APP_PROD: "sid-prod"
+  HEROKU_DOMAIN: "herokuapp.com"
+  
+
+image: docker:latest
+services:
+  - name: docker:dind
+    alias: docker
+
+
+stages:
+  - build-image
+  - acceptance-test
+  - release-image
+  - deploy-review
+  - stop-review
+  - deploy-staging
+  - test-staging  
+  - deploy-prod
+  - test-prod
+
+.test_template: &test
+  image: alpine
+  only:
+    - main
+  script:
+    - apk --no-cache add curl
+    - sleep 5
+    - cat heroku_app_url.txt
+    - apk --no-cache add curl
+    - sleep 5
+    - curl "$(awk '/Web URL:/ {print $3}' heroku_app_url.txt)" | grep -i "Dimension"
+
+build-image:
+  stage: build-image
+  script:
+    - docker build -t  ${APP_NAME} .
+    - docker save ${APP_NAME} > ${APP_NAME}.tar
+  artifacts:
+    paths:
+      - ${APP_NAME}.tar    
+
+
+acceptance_test:
+  stage: acceptance-test
+  script:
+    - docker load < ${APP_NAME}.tar
+    - docker run -d -p ${APP_EXPOSED_PORT}:${APP_CONTAINER_PORT} --env PORT=${APP_CONTAINER_PORT} --name webapp ${APP_NAME}
+    - sleep 5
+    - apk --no-cache add curl
+    - curl "http://docker:${APP_CONTAINER_PORT}" | grep -i "Dimension"
+
+release_image:
+  stage: release-image
+  script:
+    - docker load < ${APP_NAME}.tar
+    - docker tag ${APP_NAME} "${IMAGE_NAME}:${CI_COMMIT_REF_NAME}"
+    - docker tag ${APP_NAME} "${IMAGE_NAME}:${CI_COMMIT_SHORT_SHA}"
+    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
+    - docker push "${IMAGE_NAME}:${CI_COMMIT_REF_NAME}"
+    - docker push "${IMAGE_NAME}:${CI_COMMIT_SHORT_SHA}"
+
+deploy_staging:
+  stage: deploy-staging
+  environment:
+    name: staging
+    url: $HEROKU_APP_URL
+  only:
+    - main
+  script:
+    - apk --no-cache add npm
+    - npm install -g heroku
+    - heroku container:login
+    - heroku create ${HEROKU_APP_STG} || echo "project already exist"
+    - heroku container:push -a ${HEROKU_APP_STG} web
+    - heroku container:release -a ${HEROKU_APP_STG} web
+    - export HEROKU_APP_URL=$(heroku apps:info -a ${HEROKU_APP_STG} | grep "Web URL" | cut -d= -f2)
+    - echo "$HEROKU_APP_URL" > heroku_app_url.txt
+  artifacts:
+    paths:
+     - heroku_app_url.txt
+
+
+
+deploy_prod:
+  stage: deploy-prod
+  environment:
+    name: prod
+    url: $HEROKU_APP_URL
+  only:
+    - main
+  script:
+    - apk --no-cache add npm
+    - npm install -g heroku
+    - heroku container:login
+    - heroku create ${HEROKU_APP_PROD}  || echo "project already exist"
+    - heroku container:push -a ${HEROKU_APP_PROD} web
+    - heroku container:release -a ${HEROKU_APP_PROD} web  
+    - export HEROKU_APP_URL=$(heroku apps:info -a ${HEROKU_APP_PROD} | grep "Web URL" | cut -d= -f2)
+    - echo "$HEROKU_APP_URL" > heroku_app_url.txt
+  artifacts:
+    paths:
+     - heroku_app_url.txt
+  
+
+
+deploy_review:
+  stage: deploy-review
+  environment:
+    name: review/$CI_COMMIT_REF_NAME
+    url: https://sidrabhi-$CI_COMMIT_REF_NAME.${HEROKU_DOMAIN}
+    on_stop: stop_review
+  only:
+    - merge_requests
+  script:
+    - apk --no-cache add npm
+    - npm install -g heroku
+    - heroku container:login
+    - heroku create sidrabhi-$CI_COMMIT_REF_NAME  || echo "project already exist"
+    - heroku container:push -a sidrabhi-$CI_COMMIT_REF_NAME web
+    - heroku container:release -a sidrabhi-$CI_COMMIT_REF_NAME web
+
+stop_review:
+  stage: stop-review
+  variables:
+    GIT_STRATEGY: none
+  environment:
+    name: review/$CI_COMMIT_REF_NAME
+    action: stop
+  only:
+    - merge_requests
+  when: manual
+  script:
+    - apk --no-cache add npm
+    - npm install -g heroku
+    - heroku container:login
+    - heroku apps:destroy -a sidrabhi-$CI_COMMIT_REF_NAME -c sidrabhi-$CI_COMMIT_REF_NAME
+
+test_staging:
+  <<: *test
+  stage: test-staging
+  
+
+test_prod:
+  <<: *test
+  stage: test-prod
+  only:
+    - main  
+  
