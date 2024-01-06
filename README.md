@@ -85,10 +85,10 @@ LinkedIn : https://www.linkedin.com/in/sid-ahmed-rabhi/
 
 ## Technologies utilisées
 
-- L'utilisation de Docker vise à encapsuler l'application en conteneurs afin de simplifier son déploiement.
-- GitLab CI/CD est employé pour automatiser les phases de création, de vérification et de déploiement de l'application.
-- Heroku est utilisé comme plateforme d'hébergement pour déployer l'application dans divers environnements tels que la préproduction et la production.
+- L'utilisation de **Docker** vise à encapsuler l'application en conteneurs afin de simplifier son déploiement.
+- **GitLab CI/CD** est employé pour automatiser les phases de création, de vérification et de déploiement de l'application.
+- **Heroku** est utilisé comme plateforme d'hébergement pour déployer l'application dans divers environnements tels que la préproduction et la production.
 
 ## Conclusion
 
-En mettant en place ce pipeline CI/CD pour l'application web statique, j'ai pu automatiser les processus de construction, de test et de déploiement, tout en garantissant que l'application est correctement testée et fonctionnelle avant d'être mise en production. L'utilisation de Docker et de GitLab CI/CD a facilité la gestion des environnements et des déploiements, offrant un moyen efficace et fiable de mettre à jour et de maintenir l'application.
+En établissant ce flux CI/CD pour cet exemple de site web statique, j'ai automatisé les étapes de création, de test et de déploiement, assurant ainsi que l'application est vérifiée et opérationnelle avant son déploiement en production. L'intégration de Docker et de GitLab CI/CD a simplifié la gestion des environnements et des déploiements, fournissant une méthode fiable et efficace pour mettre à jour et maintenir l'application.
