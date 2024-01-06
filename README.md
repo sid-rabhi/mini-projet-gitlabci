@@ -64,20 +64,30 @@ LinkedIn : https://www.linkedin.com/in/sid-ahmed-rabhi/
    - *Condition* : S'exécute après le déploiement réussi dans l'environnement de production.
    - Exécute un curl sur l'environnement de production pour garantir le bon fonctionnement de l'application.
 
+
+
 ## Aperçu des environements sur Heroku
+
+
 
 ![webapp](images/heroku.png "webapp")
 
+
+
 ## Aperçu du site
+
+
 
 ![webapp](images/website.png "webapp")
 
 
+
+
 ## Technologies utilisées
 
-- Docker : Pour conteneuriser l'application et faciliter son déploiement.
-- GitLab CI/CD : Pour automatiser les étapes de construction, de test et de déploiement de l'application.
-- Heroku : Pour héberger l'application dans différents environnements (review, staging et production).
+- L'utilisation de Docker vise à encapsuler l'application en conteneurs afin de simplifier son déploiement.
+- GitLab CI/CD est employé pour automatiser les phases de création, de vérification et de déploiement de l'application.
+- Heroku est utilisé comme plateforme d'hébergement pour déployer l'application dans divers environnements tels que la préproduction et la production.
 
 ## Conclusion
 
