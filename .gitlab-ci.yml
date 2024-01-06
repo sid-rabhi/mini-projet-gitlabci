@@ -36,7 +36,7 @@ stages:
     - sleep 5
     - curl "$(awk '/Web URL:/ {print $3}' heroku_app_url.txt)" | grep -i "Dimension"
 
-build-image:
+build_image:
   stage: build-image
   script:
     - docker build -t  ${APP_NAME} .

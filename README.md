@@ -21,3 +21,46 @@ LinkedIn : https://www.linkedin.com/in/sid-ahmed-rabhi/
 ## Aperçu du pipeline CI/CD
 
 ![pipeline ci/cd](images/pipeline.png "pipeline ci/cd")
+
+## Workflow du Pipeline CI/CD avec Conditions d'Exécution
+
+1. **Build image**
+   - *Condition* : S'exécute pour chaque commit.
+   - Build l'image Docker en utilisant le Dockerfile que j'ai créé.
+   - Enregistre l'image dans un artefact sous le nom `staticwebsite.tar`
+   
+2. **Acceptance test**
+   - *Condition* : S'exécute pour chaque commit.
+   - Charge l'image à partir de l'artefact `staticwebsite.tar`, puis exécute le conteneur.
+   - Teste l'application en effectuant un curl.
+
+3. **Release image**
+   - *Condition* : S'exécute pour chaque commit.
+   - Publie l'image Docker dans le registre de GitLab.
+   - Charge l'image à partir de l'artefact `staticwebsite.tar`, puis la tag avec le nom de la branche et le commit SHA.
+   - Pousse l'image dans le registre de GitLab pour garder une trace des images pour chaque commit et branche.
+
+4. **Deploy review**
+   - *Condition* : S'exécute pour chaque nouvelle merge request ou mise à jour d'une merge request existante.
+   
+   
+5. **Stop review**
+   - *Condition* : S'exécute lorsqu'une merge request est fermée ou acceptée.
+   
+
+6. **Deploy staging**
+   - *Condition* : S'exécute lorsqu'un commit est poussé sur la branche `main`.
+   - Déploie l'application dans un environnement de préproduction (staging) sur Heroku.
+   
+7. **Test staging**
+   - *Condition* : S'exécute après le déploiement réussi dans l'environnement de préproduction.
+   - Exécute un curl sur l'environnement de préproduction pour s'assurer que l'application fonctionne correctement.
+   
+8. **Deploy prod**
+    - *Condition* : S'exécute lorsqu'un commit est poussé sur la branche `main`.
+   - Déploie l'application dans l'environnement de production sur Heroku.
+   
+9. **Test prod**
+   - *Condition* : S'exécute après le déploiement réussi dans l'environnement de production.
+   - Exécute un curl sur l'environnement de production pour garantir le bon fonctionnement de l'application.
+
