@@ -8,12 +8,6 @@ Dans ce projet, j'ai conteneurisé un site web statique disponible sur mon Githu
 
 Auteur : Sid Ahmed Rabhi
 
-Contexte : formation Bootcamp DevOps promotion 16
-
-Centre de formation : Eazytraining
-
-Période : novembre-décembre-janvier
-
 Date : 06 janvier 2024
 
 LinkedIn : https://www.linkedin.com/in/sid-ahmed-rabhi/
@@ -57,7 +51,7 @@ LinkedIn : https://www.linkedin.com/in/sid-ahmed-rabhi/
    - Exécute un curl sur l'environnement de préproduction pour s'assurer que l'application fonctionne correctement.
    
 8. **Deploy prod**
-    - *Condition* : S'exécute lorsqu'un commit est poussé sur la branche `main`.
+   - *Condition* : S'exécute lorsqu'un commit est poussé sur la branche `main`.
    - Déploie l'application dans l'environnement de production sur Heroku.
    
 9. **Test prod**
